@@ -1,0 +1,16 @@
+{
+  "name": "real_wrapped",
+  "version": "1.0.0",
+  "description": "who cares",
+  "main": "index.ts",
+  "scripts": {
+    "watch": "nodemon index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
