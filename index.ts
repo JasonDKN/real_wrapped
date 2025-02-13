@@ -43,18 +43,6 @@ const generateTopTenBy = (field: string) => {
   );
 };
 
-// if (passedInArgs.length === 0) {
-//   throw new Error(
-//     "Arguments are required. Use '--help' to view a list of available arguments."
-//   );
-// }
-
-// for (const arg of passedInArgs) {
-//   if (!knownArgs.includes(arg)) {
-//     // throw new Error("Invalid argument.");
-//   }
-// }
-
 const parseArgs = (): { listSize: number; topTenType: string } => {
   const passedInArgs = process.argv.slice(2);
   const knownArgs = ["type", "listSize"];
@@ -104,16 +92,6 @@ const parseArgs = (): { listSize: number; topTenType: string } => {
   };
 };
 
-//--type=albums
-
-// console.log({ listSize, topTenType });
-
-// const argumentFieldMapping2: Record<string, string> = {
-//   "--artists": "Artists",
-//   "--songs": "Songs",
-//   "--albums": "Albums",
-// };
-
 const handleArg = (topTenType: string, listSize: number) => {
   const argumentFieldMapping: Record<string, string> = {
     artists: "master_metadata_album_artist_name",
@@ -127,23 +105,3 @@ const handleArg = (topTenType: string, listSize: number) => {
 
 const { listSize, topTenType } = parseArgs();
 handleArg(topTenType, listSize);
-
-// const handleArg = (arg: string, listSize: number) => {
-//   for (const arg of passedInArgs) {
-//     if (arg.length < 6) {
-//       listSize += Number(arg);
-//     }
-//   }
-//   if (arg.length >= 6) {
-//     console.log(`Top ${listSize} ${argumentFieldMapping2[arg]}:`);
-//     console.log(generateTopTenBy(argumentFieldMapping[arg]).slice(0, listSize));
-//   }
-// };
-
-// const handleArgs = (passedInArgs: string[], listSize: number) => {
-//   for (const arg of passedInArgs) {
-//     handleArg(arg, listSize);
-//   }
-// };
-
-// handleArgs(passedInArgs, listSize);
