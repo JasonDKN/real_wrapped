@@ -1,3 +1,4 @@
+import commandLineArgs from "command-line-args";
 import { data as spotifyData } from "./data/Streaming_History_Audio_2024_14_truncated";
 
 const aggregateBy = (property: string, data: Record<string, unknown>[]) => {
@@ -43,65 +44,53 @@ const generateTopTenBy = (field: string) => {
   );
 };
 
-const parseArgs = (): { listSize: number; topTenType: string } => {
-  const passedInArgs = process.argv.slice(2);
-  const knownArgs = ["type", "listSize"];
-
-  for (const arg of passedInArgs) {
-    if (!arg.startsWith("--")) {
-      throw new Error(
-        "Invalid argument format. Use -- at beginning of argument."
-      );
-    }
-    const argName = arg.replace("--", "").split("=")[0];
-    if (!knownArgs.includes(argName)) {
-      throw new Error(`Invalid argument: ${argName}.`);
-    }
-  }
-
-  const listSize = Number(
-    passedInArgs.find((arg) => arg.includes("listSize"))?.split("=")[1]
-  );
-
+const validateOptions = ({
+  listSize,
+  type,
+}: {
+  listSize: number;
+  type: string;
+}) => {
   if (Number.isNaN(listSize)) {
     throw new Error("Please provide a numeric value for list size.");
   }
 
-  const topTenType = passedInArgs
-    .find((arg) => arg.includes("type"))
-    ?.split("=")[1];
-
-  if (
-    topTenType !== "songs" &&
-    topTenType !== "albums" &&
-    topTenType !== "artists"
-  ) {
-    throw new Error(`Argument: ${topTenType} does not exist.`);
+  if (type !== "songs" && type !== "albums" && type !== "artists") {
+    throw new Error(`Argument: ${type} does not exist.`);
   }
 
-  if (typeof topTenType === "undefined") {
+  if (typeof type === "undefined") {
     throw new Error("Nice try, buddy!");
   }
+
   if (typeof listSize === "undefined") {
     throw new Error("Nice try, buddy!");
   }
-
-  return {
-    listSize: Number(listSize),
-    topTenType,
-  };
 };
 
-const handleArg = (topTenType: string, listSize: number) => {
+const optionDefinitions = [
+  { name: "type", type: String },
+  { name: "listSize", type: Number },
+];
+
+const options = commandLineArgs(optionDefinitions) as {
+  type: string;
+  listSize: number;
+};
+
+const handleOptions = (options: { listSize: number; type: string }) => {
   const argumentFieldMapping: Record<string, string> = {
     artists: "master_metadata_album_artist_name",
     songs: "master_metadata_track_name",
     albums: "master_metadata_album_album_name",
   };
   console.log(
-    generateTopTenBy(argumentFieldMapping[topTenType]).slice(0, listSize)
+    generateTopTenBy(argumentFieldMapping[options.type]).slice(
+      0,
+      options.listSize
+    )
   );
 };
 
-const { listSize, topTenType } = parseArgs();
-handleArg(topTenType, listSize);
+validateOptions(options);
+handleOptions(options);
